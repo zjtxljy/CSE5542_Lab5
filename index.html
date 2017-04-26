@@ -15,6 +15,7 @@
     varying vec4 vPos;
     varying vec3 vNormal;
     varying vec4 light_in_eye;
+    varying highp vec2 FtexCoord;
     
     uniform vec4 ambient_coef;
     uniform vec4 diffuse_coef;
@@ -25,7 +26,17 @@
     uniform vec4 light_diffuse;
     uniform vec4 light_specular;
 
+    uniform mat4 uV2WMatrix;
+
+    uniform int textureOption;
+
+    uniform samplerCube cubeMap;
+    uniform sampler2D myTexture;
+
     void main(void) {
+        vec4 texcolor;
+        vec3 view_vector, ref;
+        vec4 env_color;
 
         vec4 ambient = ambient_coef*light_ambient;
 
@@ -42,7 +53,20 @@
         else
             specular = vec4(0,0,0,1);
 
-        gl_FragColor = ambient + diffuse + specular + vec4(0,0,0,1);
+        if (textureOption = 1) {
+            gl_FragColor = ambient + diffuse + specular + vec4(0,0,0,1);
+        }
+        else if (textureOption = 2) {
+            texcolor = texture2D(myTexture, FtexCoord);
+            gl_FragColor = texcolor *(ambient+diffuse) +specular;
+        }
+        else {
+            view_vector = normalize(vec3(vec4(0,0,0,1)-vPos));
+            ref = normalize(reflect(-view_vector, v_normal));  // in eye space
+            ref = vec3(uV2WMatrix*vec4(ref,0));   // convert to world space
+            env_color = textureCube(cubeMap, ref);
+            gl_FragColor = env_color;
+        }
     }
 </script>
 
@@ -63,9 +87,11 @@
 
     attribute vec3 aVertexPosition;
     attribute vec3 aVertexNormal;
+    attribute vec3 aVertexTexCoords;
     varying vec4 vPos;
     varying vec3 vNormal;
     varying vec4 light_in_eye;
+    varying highp vec2 FtexCoord;
 
     uniform mat4 uMMatrix;
     uniform mat4 uVMatrix;
@@ -74,12 +100,12 @@
 
     uniform vec4 light_pos;
 
-
     void main(void) {
 
         gl_Position = uPMatrix*uVMatrix*uMMatrix*vec4(aVertexPosition, 1.0);
 
         light_in_eye = uVMatrix*light_pos;
+        FtexCoord = aVertexTexCoords;
         vPos = uVMatrix*uMMatrix*vec4(aVertexPosition, 1.0);
         vNormal = normalize(vec3(uNMatrix*vec4(aVertexNormal,0.0)));
     }
@@ -109,6 +135,13 @@
 
 <body onload="webGLStart();">
     <canvas id="code03-canvas"style="border:none;"width="700"height="700"></canvas>
+
+    <div>
+    <h4> Texture Mode: </h4>
+    <button  onclick="texOption(1)"> None</button>
+    <button  onclick="texOption(2)"> Texture</button>
+    <button  onclick="texOption(3)"> Cubemap</button>
+    </div>
 
     <h4> Move the Center of Interest (world space):  </h4>
     <button  onclick="moveCOI(1)"> Up</button>

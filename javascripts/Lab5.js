@@ -319,6 +319,9 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
         shaderProgram.light_diffuseUniform = gl.getUniformLocation(shaderProgram, "light_diffuse");
         shaderProgram.light_specularUniform = gl.getUniformLocation(shaderProgram, "light_specular");
 
+        shaderProgram.cube_map_textureUniform = gl.getUniformLocation(shaderProgram, "cubeMap");
+        shaderProgram.textureUniform = gl.getUniformLocation(shaderProgram, "myTexture");
+
         shaderProgram.textureOptionUniform = gl.getUniformLocation(shaderProgram, "textureOption");
 
 
@@ -354,6 +357,13 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 		document.addEventListener('mousedown', onDocumentMouseDown, false); 
 
         drawScene();
+    }
+
+
+    function texOption(i) {
+    	textureOption = i;
+
+    	drawScene();
     }
 
 	function moveCOI(i) {
