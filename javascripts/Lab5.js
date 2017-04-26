@@ -220,6 +220,53 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
         
         vMatrix = mat4.lookAt(cameraPosition, COI, [0,1,0], vMatrix);
         mat4.multiply(cameraRotateMatrix, vMatrix, vMatrix);
+
+        gl.useProgram(shaderProgram);
+
+        gl.uniformMatrix4fv(shaderProgram.mMatrixUniform, false, mMatrix);
+        gl.uniformMatrix4fv(shaderProgram.vMatrixUniform, false, vMatrix);
+        gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
+        mat4.identity(nMatrix); 
+		nMatrix = mat4.multiply(nMatrix, vMatrix);
+		nMatrix = mat4.multiply(nMatrix, inmMatrix); 	
+		nMatrix = mat4.inverse(nMatrix);
+		nMatrix = mat4.transpose(nMatrix); 
+		gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, nMatrix);
+
+		mat4.identity(v2wMatrix);
+    	v2wMatrix = mat4.multiply(v2wMatrix, vMatrix);   
+    	v2wMatrix = mat4.inverse(v2wMatrix);
+    	gl.uniformMatrix4fv(shaderProgram.v2wMatrixUniform, false, v2wMatrix);
+
+    	gl.uniform4f(shaderProgram.light_posUniform,lightPosition[0], lightPosition[1], lightPosition[2], 1.0); 	
+		gl.uniform4f(shaderProgram.ambient_coefUniform, mat_ambient[0], mat_ambient[1], mat_ambient[2], 1.0); 
+		gl.uniform4f(shaderProgram.diffuse_coefUniform, mat_diffuse[0], mat_diffuse[1], mat_diffuse[2], 1.0); 
+		gl.uniform4f(shaderProgram.specular_coefUniform, mat_specular[0], mat_specular[1], mat_specular[2],1.0); 
+		gl.uniform1f(shaderProgram.shininess_coefUniform, mat_shine[0]); 
+
+		gl.uniform4f(shaderProgram.light_ambientUniform, lightAmbient[0], lightAmbient[1], lightAmbient[2], 1.0); 
+		gl.uniform4f(shaderProgram.light_diffuseUniform, lightDiffuse[0], lightDiffuse[1], lightDiffuse[2], 1.0); 
+		gl.uniform4f(shaderProgram.light_specularUniform, lightSpecular[0], lightSpecular[1], lightSpecular[2],1.0); 
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, modelVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, modelVertexTextureCoordBufferr);
+        gl.vertexAttribPointer(shaderProgram.vertexTexCoordsAttribute, 3, gl.FLOAT, false, 0, 0);
+		gl.bindBuffer(gl.ARRAY_BUFFER, modelVertexNormalBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, modelVertexIndexBuffer);
+
+		gl.uniform1i(shaderProgram.textureOptionUniform, textureOption);
+
+		gl.activeTexture(gl.TEXTURE0);   // set texture unit 0 to use
+		gl.bindTexture(gl.TEXTURE_2D, sampleTexture);    // bind the texture object to the texture unit
+		gl.uniform1i(shaderProgram.textureUniform, 0);   // pass the texture unit to the shader
+
+		gl.activeTexture(gl.TEXTURE1);   // set texture unit 1 to use 
+		gl.bindTexture(gl.TEXTURE_CUBE_MAP, cubemapTexture);    // bind the texture object to the texture unit 
+		gl.uniform1i(shaderProgram.cube_map_textureUniform, 1);   // pass the texture unit to the shader
+
+		gl.drawElements(gl.TRIANGLES, modelVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
  
 		gl.useProgram(shaderProgramSB);
 
