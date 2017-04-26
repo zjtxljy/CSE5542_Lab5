@@ -50,9 +50,16 @@
             alert("Could not initialise shaders");
         }
 
-        gl.useProgram(shaderProgram);
+        shaderProgramSB = gl.createProgram();
+        var fragmentShader2 = getShader(gl, "shader-fs-skybox");
+        var vertexShader2 = getShader(gl, "shader-vs-skybox");
 
-        shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
-        gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+        gl.attachShader(shaderProgramSB, vertexShader2);
+        gl.attachShader(shaderProgramSB, fragmentShader2);
+        gl.linkProgram(shaderProgramSB);
+
+        if (!gl.getProgramParameter(shaderProgramSB, gl.LINK_STATUS)) {
+            alert("Could not initialise shaders");
+        }
     }
 

@@ -46,6 +46,18 @@
     }
 </script>
 
+
+
+<script id="shader-fs-skybox" type="x-shader/x-fragment">
+    precision mediump float;
+    varying vec3 vCoords;
+    uniform samplerCube cubeMap;
+    void main() {
+         gl_FragColor = textureCube(cubeMap, vCoords);
+    }
+</script>
+
+
 <!--  ************** Vertex Shader ************* -->
 <script id="shader-vs" type="x-shader/x-vertex">
 
@@ -70,6 +82,20 @@
         light_in_eye = uVMatrix*light_pos;
         vPos = uVMatrix*uMMatrix*vec4(aVertexPosition, 1.0);
         vNormal = normalize(vec3(uNMatrix*vec4(aVertexNormal,0.0)));
+    }
+</script>
+
+
+
+<script id="shader-vs-skybox" type="x-shader/x-vertex">
+    uniform mat4 uMMatrix;
+    uniform mat4 uVMatrix;
+    uniform mat4 uPMatrix;
+    attribute vec3 aVertexPosition;
+    varying vec3 vCoords;
+    void main() {
+       gl_Position = uPMatrix*uVMatrix*uMMatrix*vec4(aVertexPosition, 1.0);
+       vCoords = aVertexPosition;
     }
 </script>
 
