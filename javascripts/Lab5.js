@@ -33,13 +33,15 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
     var modelVertexIndexBuffer;
     var skyboxVertexPositionBuffer;
     var skyboxVertexIndexBuffer;
-    var model_ambient = [0, 0, 0, 1]; 
-  	var	model_diffuse= [0.7, 0.7, 0.7, 1]; 
-  	var	model_specular = [.9, .9, .9,1]; 
-  	var	model_shine = [50];
+    var mat_ambient = [0, 0, 0, 1]; 
+  	var	mat_diffuse= [0.7, 0.7, 0.7, 1]; 
+  	var	mat_specular = [.9, .9, .9,1]; 
+  	var	mat_shine = [50];
   	var vMatrix = mat4.create(); // view matrix
     var mMatrix = mat4.create();  // model matrix
     var pMatrix = mat4.create();  //projection matrix 
+    var nMatrix = mat4.create();
+    var v2wMatrix = mat4.create();
     var cameraRotateMatrix = mat4.create();
     var cameraPosition = vec3.create();
     var COI = vec3.create();
@@ -228,7 +230,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
         gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
         mat4.identity(nMatrix); 
 		nMatrix = mat4.multiply(nMatrix, vMatrix);
-		nMatrix = mat4.multiply(nMatrix, inmMatrix); 	
+		nMatrix = mat4.multiply(nMatrix, mMatrix); 	
 		nMatrix = mat4.inverse(nMatrix);
 		nMatrix = mat4.transpose(nMatrix); 
 		gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, nMatrix);
@@ -250,7 +252,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, modelVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
-        gl.bindBuffer(gl.ARRAY_BUFFER, modelVertexTextureCoordBufferr);
+        gl.bindBuffer(gl.ARRAY_BUFFER, modelVertexTextureCoordBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexTexCoordsAttribute, 3, gl.FLOAT, false, 0, 0);
 		gl.bindBuffer(gl.ARRAY_BUFFER, modelVertexNormalBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
