@@ -53,7 +53,7 @@ var shaderProgram;
 
     function handleLoadedModel(modelData) {
 		console.log(" in handleLoadedModel");
-		console.leg("Data:" + modelData);
+		console.log("Data:" + modelData);
 		/*
 		teapotVertexPositionBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexPositionBuffer);
