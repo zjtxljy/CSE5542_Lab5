@@ -151,6 +151,8 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 						gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 					}
 					gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+					console.log("loading cubemap texture....");
+					console.log(cubemapTexture);
 				}
 			}
 			img[i].src = urls[i];
