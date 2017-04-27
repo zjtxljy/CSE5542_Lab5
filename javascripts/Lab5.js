@@ -283,7 +283,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
  
 		gl.useProgram(shaderProgramSB);
 
-		console.log("Cubemap:")
+/*		console.log("Cubemap:")
 
 		gl.uniformMatrix4fv(shaderProgramSB.mMatrixUniform, false, mMatrix);
         gl.uniformMatrix4fv(shaderProgramSB.vMatrixUniform, false, vMatrix);
@@ -299,7 +299,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
         gl.vertexAttribPointer(shaderProgramSB.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, skyboxVertexIndexBuffer);
 		gl.drawElements(gl.TRIANGLES, skyboxVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-
+*/
     }
 
 
