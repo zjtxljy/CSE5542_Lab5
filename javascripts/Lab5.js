@@ -109,6 +109,8 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 	function initSkybox(){
 		var vertices = [ -100, -100, -100, 100, -100, -100, -100, 100, -100, 100, 100, -100, -100, -100, 100, 100, -100, 100, -100, 100, 100, 100, 100, 100];
 		var indices = [2, 1, 0, 1, 2, 3, 4, 2, 0, 2, 4, 6, 1, 4, 0, 4, 1, 5, 6, 5, 7, 5, 6, 4, 3, 6, 7, 6, 3, 2, 5, 3, 7, 3, 5, 1];
+		console.log(vertices.length);
+		console.log(indices.length);
 		skyboxVertexPositionBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, skyboxVertexPositionBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
@@ -292,6 +294,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 		gl.uniform1i(shaderProgramSB.cube_map_textureUniform, 0);   // pass the texture unit to the shader
 
 		console.log(skyboxVertexIndexBuffer.numItems);
+		console.log(skyboxVertexPositionBuffer.numItems);
         gl.bindBuffer(gl.ARRAY_BUFFER, skyboxVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgramSB.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, skyboxVertexIndexBuffer);
