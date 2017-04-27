@@ -291,6 +291,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 		gl.bindTexture(gl.TEXTURE_CUBE_MAP, cubemapTexture);    // bind the texture object to the texture unit 
 		gl.uniform1i(shaderProgramSB.cube_map_textureUniform, 0);   // pass the texture unit to the shader
 
+		console.log(skyboxVertexIndexBuffer.numItems);
         gl.bindBuffer(gl.ARRAY_BUFFER, skyboxVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgramSB.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, skyboxVertexIndexBuffer);
