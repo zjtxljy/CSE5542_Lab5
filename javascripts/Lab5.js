@@ -264,7 +264,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 		gl.bindBuffer(gl.ARRAY_BUFFER, modelVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
         gl.bindBuffer(gl.ARRAY_BUFFER, modelVertexTextureCoordBuffer);
-        gl.vertexAttribPointer(shaderProgram.vertexTexCoordsAttribute, 3, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(shaderProgram.vertexTexCoordsAttribute, 2, gl.FLOAT, false, 0, 0);
 		gl.bindBuffer(gl.ARRAY_BUFFER, modelVertexNormalBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, modelVertexIndexBuffer);
