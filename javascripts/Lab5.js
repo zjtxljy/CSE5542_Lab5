@@ -42,14 +42,12 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
     var pMatrix = mat4.create();  //projection matrix 
     var nMatrix = mat4.create();
     var v2wMatrix = mat4.create();
-    var cameraRotateMatrix = mat4.create();
-    var cameraPosition = vec3.create();
-    var COI = vec3.create();
     var lightPosition = vec3.create();
     var lightAmbient = [];
     var lightDiffuse = [];
 	var lightSpecular = []; 
 	var textureOption = 1;
+	var trackball;
 
   	var cubemapTexture;
 	var sampleTexture;
@@ -228,8 +226,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         
-        vMatrix = mat4.lookAt(cameraPosition, COI, [0,1,0], vMatrix);
-        mat4.multiply(cameraRotateMatrix, vMatrix, vMatrix);
+        vMatrix = trackball.getViewMatrix();
 
         if (modelVertexPositionBuffer == null || modelVertexNormalBuffer == null || modelVertexIndexBuffer == null || lightSpecular == []) {
             return;
@@ -304,54 +301,6 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 
     ///////////////////////////////////////////////////////////////
 
-     var lastMouseX = 0, lastMouseY = 0;
-
-    ///////////////////////////////////////////////////////////////
-
-     function onDocumentMouseDown( event ) {
-          event.preventDefault();
-          document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-          document.addEventListener( 'mouseup', onDocumentMouseUp, false );
-          document.addEventListener( 'mouseout', onDocumentMouseOut, false );
-          var mouseX = event.clientX;
-          var mouseY = event.clientY;
-
-          lastMouseX = mouseX;
-          lastMouseY = mouseY; 
-
-      }
-
-     function onDocumentMouseMove( event ) {
-          var mouseX = event.clientX;
-          var mouseY = event.ClientY; 
-
-          var diffX = mouseX - lastMouseX;
-          var diffY = mouseY - lastMouseY;
-
-          lastMouseX = mouseX;
-          lastMouseY = mouseY;
-
-          var tempMatrix = mat4.create();
-		  mat4.identity(tempMatrix);
-          mat4.rotate(tempMatrix, degToRad(diffX/5), [0, 0, 1]);
-          mat4.multiply(tempMatrix, cameraRotateMatrix, cameraRotateMatrix);
-
-          drawScene();
-     }
-
-     function onDocumentMouseUp( event ) {
-          document.removeEventListener( 'mousemove', onDocumentMouseMove, false );
-          document.removeEventListener( 'mouseup', onDocumentMouseUp, false );
-          document.removeEventListener( 'mouseout', onDocumentMouseOut, false );
-     }
-
-     function onDocumentMouseOut( event ) {
-          document.removeEventListener( 'mousemove', onDocumentMouseMove, false );
-          document.removeEventListener( 'mouseup', onDocumentMouseUp, false );
-          document.removeEventListener( 'mouseout', onDocumentMouseOut, false );
-     }
-
-    ///////////////////////////////////////////////////////////////
 
     function webGLStart() {
         var canvas = document.getElementById("code03-canvas");
@@ -396,6 +345,8 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 		shaderProgramSB.pMatrixUniform = gl.getUniformLocation(shaderProgramSB, "uPMatrix");
 		shaderProgramSB.cube_map_textureUniform = gl.getUniformLocation(shaderProgramSB, "cubeMap");
 
+		trackball = new TrackballRotator(canvas,drawScene, 5, [0, 0, 1], [0, 1, 0]);
+
         initBuffers(); 
         initSkybox();
         initTextures();
@@ -405,21 +356,15 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 
         mat4.perspective(60, 1.0, 0.1, 100, pMatrix);  // set up the projection matrix 
 
-        vMatrix = mat4.lookAt(cameraPosition, COI, [0,1,0], vMatrix);	// set up the view matrix
-		mat4.identity(cameraRotateMatrix);
-
 		mat4.identity(mMatrix);
 		mMatrix = mat4.scale(mMatrix, [1 / 10, 1 / 10, 1 / 10]);
 
-		vec3.set([0,0,2],cameraPosition);
-		vec3.set([0,0,0], COI);
 		vec3.set([0,50,50],lightPosition);
 		lightAmbient = [0,0,0,1];
 		lightDiffuse = [.8,.8,.8,1];
 		lightSpecular = [1,1,1,1];
 
 
-		document.addEventListener('mousedown', onDocumentMouseDown, false); 
 
         drawScene();
     }
@@ -431,49 +376,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
     	drawScene();
     }
 
-	function moveCOI(i) {
-		if(i == 1) {
-			vec3.add(COI, [0,1,0], COI);
-		}
-		else if(i == 2) {
-			vec3.add(COI, [0,-1,0], COI);
-		}
-		else if(i == 3) {
-			vec3.add(COI, [-1,0,0], COI);
-		}
-		else if(i == 4) {
-			vec3.add(COI, [1,0,0], COI);
-		}
-		console.log("COI:"+COI);
-		
-		drawScene(); 
-
-	} 
-
-	function movePOC(i) {
-		if(i == 1) {
-			vec3.add(cameraPosition, [0,1,0]);
-		}
-		else if(i == 2) {
-			vec3.add(cameraPosition, [0,-1,0]);
-		}
-		else if(i == 3) {
-			vec3.add(cameraPosition, [-1,0,0]);
-		}
-		else if(i == 4) {
-			vec3.add(cameraPosition, [1,0,0]);
-		}
-		else if(i == 5) {
-			vec3.add(cameraPosition, [0,0,-1]);
-		}
-		else if(i == 6) {
-			vec3.add(cameraPosition, [0,0,1]);
-		}
-		console.log("Camera:"+cameraPosition);
-		
-		drawScene(); 
-
-	} 
+	
 
 	function moveLight(i) {
 		if(i == 1) {
@@ -513,45 +416,12 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 		}
 	}
 
-	function rotateCamera(i) {
-		if(i == 1) {
-			var tempMatrix = mat4.create();
-			mat4.identity(tempMatrix);
-        	mat4.rotateX(tempMatrix, degToRad(-5), tempMatrix);
-        	mat4.multiply(tempMatrix, cameraRotateMatrix, cameraRotateMatrix);
-		}
-		else if(i == 2) {
-			var tempMatrix = mat4.create();
-			mat4.identity(tempMatrix);
-        	mat4.rotateX(tempMatrix, degToRad(5), tempMatrix);
-        	mat4.multiply(tempMatrix, cameraRotateMatrix, cameraRotateMatrix);
-		}
-		else if(i == 3) {
-			var tempMatrix = mat4.create();
-			mat4.identity(tempMatrix);
-        	mat4.rotateY(tempMatrix, degToRad(-5), tempMatrix);
-        	mat4.multiply(tempMatrix, cameraRotateMatrix, cameraRotateMatrix);
-		}
-		else if(i == 4) {
-			var tempMatrix = mat4.create();
-			mat4.identity(tempMatrix);
-        	mat4.rotateY(tempMatrix, degToRad(5), tempMatrix);
-        	mat4.multiply(tempMatrix, cameraRotateMatrix, cameraRotateMatrix);
-		}
-		
-		drawScene(); 
-	}
-
+	
 	function redraw() {
-		Z_angle = 0; 
-		vec3.set([0,0,5],cameraPosition);
-		vec3.set([0,0,0], COI);
 		vec3.set([0,5,5],lightPosition);
 		lightAmbient = [0,0,0,1];
 		lightDiffuse = [.8,.8,.8,1];
 		lightSpecular = [1,1,1,1];
-		vMatrix = mat4.lookAt(cameraPosition, COI, [0,1,0], vMatrix);
-		mat4.identity(cameraRotateMatrix);
+		trackball.setView(5, [0, 0, 1], [0, 1, 0]);
 		drawScene();
-		window.setInterval("Rotateball()", 20);
 	}
