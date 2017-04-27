@@ -73,6 +73,9 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 
     function handleLoadedModel(modelData) {
 		console.log(" in handleLoadedModel");
+		console.log(modelData);
+		console.log(modelData.indices);
+		console.log(modelData.indices.length);
 		
 		modelVertexPositionBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, modelVertexPositionBuffer);
