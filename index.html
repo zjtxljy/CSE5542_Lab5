@@ -14,13 +14,13 @@
     precision mediump float;
     varying vec4 vPos;
     varying vec3 vNormal;
+    varying vec4 light_in_eye;
     varying highp vec2 FtexCoord;
     
     uniform vec4 ambient_coef;
     uniform vec4 diffuse_coef;
     uniform vec4 specular_coef;
     uniform float mat_shininess;
-    uniform vec4 light_pos;
 
     uniform vec4 light_ambient;
     uniform vec4 light_diffuse;
@@ -40,7 +40,7 @@
 
         vec4 ambient = ambient_coef*light_ambient;
 
-        vec3 light_vector = normalize(vec3(light_pos-vPos));
+        vec3 light_vector = normalize(vec3(light_in_eye-vPos));
         vec3 eye_vector = normalize(-vec3(vPos));
         float ndotl = max(dot(vNormal, light_vector), 0.0);
         vec4 diffuse = diffuse_coef*light_diffuse*ndotl;
@@ -90,6 +90,7 @@
     attribute vec2 aVertexTexCoords;
     varying vec4 vPos;
     varying vec3 vNormal;
+    varying vec4 light_in_eye;
     varying highp vec2 FtexCoord;
 
     uniform mat4 uMMatrix;
@@ -97,12 +98,13 @@
     uniform mat4 uPMatrix;
     uniform mat4 uNMatrix;
 
-    
+    uniform vec4 light_pos;
 
     void main(void) {
 
         gl_Position = uPMatrix*uVMatrix*uMMatrix*vec4(aVertexPosition, 1.0);
 
+        light_in_eye = uVMatrix*light_pos;
         FtexCoord = aVertexTexCoords;
         vPos = uVMatrix*uMMatrix*vec4(aVertexPosition, 1.0);
         vNormal = normalize(vec3(uNMatrix*vec4(aVertexNormal,0.0)));
@@ -125,7 +127,6 @@
 
 
 <script type="text/javascript" src="javascripts/shaders_setup.js"></script>
-<script type="text/javascript" src="javascripts/trackball-rotator.js"></script>
 <script type="text/javascript" src="javascripts/Lab5.js"></script>
 
 
@@ -141,6 +142,33 @@
     <button  onclick="texOption(2)"> Texture</button>
     <button  onclick="texOption(3)"> Cubemap</button>
     </div>
+
+    <h4> Move the Center of Interest (world space):  </h4>
+    <button  onclick="moveCOI(1)"> Up</button>
+    <button  onclick="moveCOI(2)"> Down</button>
+    <button  onclick="moveCOI(3)"> Left</button>
+    <button  onclick="moveCOI(4)"> Right</button>
+
+    <h4> Move the Position of Camera (world space):  </h4>
+    <button  onclick="movePOC(1)"> Up</button>
+    <button  onclick="movePOC(2)"> Down</button>
+    <button  onclick="movePOC(3)"> Left</button>
+    <button  onclick="movePOC(4)"> Right</button>
+    <button  onclick="movePOC(5)"> Forward</button>
+    <button  onclick="movePOC(6)"> Backward</button>
+
+    <div>
+    <h4> Rotate camera about x axis: </h4>
+    <button  onclick="rotateCamera(1)"> CounterClockwise</button>
+    <button  onclick="rotateCamera(2)"> Clockwise</button>
+    </div>
+
+    <div>
+    <h4> Rotate camera about y axis: </h4>
+    <button  onclick="rotateCamera(3)"> CounterClockwise</button>
+    <button  onclick="rotateCamera(4)"> Clockwise</button>
+    </div>
+
     <div>
     <h4> Move light position: </h4>
     <button  onclick="moveLight(1)"> Up</button>
