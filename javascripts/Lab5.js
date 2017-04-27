@@ -409,10 +409,11 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 		mat4.identity(cameraRotateMatrix);
 
 		mat4.identity(mMatrix);
+		mMatrix = mat4.scale(mMatrix, [1 / 10, 1 / 10, 1 / 10]);
 
-		vec3.set([0,0,20],cameraPosition);
+		vec3.set([0,0,2],cameraPosition);
 		vec3.set([0,0,0], COI);
-		vec3.set([0,50,05],lightPosition);
+		vec3.set([0,50,50],lightPosition);
 		lightAmbient = [0,0,0,1];
 		lightDiffuse = [.8,.8,.8,1];
 		lightSpecular = [1,1,1,1];
@@ -432,17 +433,18 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 
 	function moveCOI(i) {
 		if(i == 1) {
-			vec3.add(COI, [0,0.2,0], COI);
+			vec3.add(COI, [0,1,0], COI);
 		}
 		else if(i == 2) {
-			vec3.add(COI, [0,-0.2,0], COI);
+			vec3.add(COI, [0,-1,0], COI);
 		}
 		else if(i == 3) {
-			vec3.add(COI, [-0.2,0,0], COI);
+			vec3.add(COI, [-1,0,0], COI);
 		}
 		else if(i == 4) {
-			vec3.add(COI, [0.2,0,0], COI);
+			vec3.add(COI, [1,0,0], COI);
 		}
+		console.log("COI:"+COI);
 		
 		drawScene(); 
 
@@ -450,23 +452,24 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 
 	function movePOC(i) {
 		if(i == 1) {
-			vec3.add(cameraPosition, [0,2,0]);
+			vec3.add(cameraPosition, [0,1,0]);
 		}
 		else if(i == 2) {
-			vec3.add(cameraPosition, [0,-2,0]);
+			vec3.add(cameraPosition, [0,-1,0]);
 		}
 		else if(i == 3) {
-			vec3.add(cameraPosition, [-2,0,0]);
+			vec3.add(cameraPosition, [-1,0,0]);
 		}
 		else if(i == 4) {
-			vec3.add(cameraPosition, [2,0,0]);
+			vec3.add(cameraPosition, [1,0,0]);
 		}
 		else if(i == 5) {
-			vec3.add(cameraPosition, [0,0,-2]);
+			vec3.add(cameraPosition, [0,0,-1]);
 		}
 		else if(i == 6) {
-			vec3.add(cameraPosition, [0,0,2]);
+			vec3.add(cameraPosition, [0,0,1]);
 		}
+		console.log("Camera:"+cameraPosition);
 		
 		drawScene(); 
 
@@ -474,23 +477,24 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 
 	function moveLight(i) {
 		if(i == 1) {
-			vec3.add(lightPosition, [0,0.5,0]);
+			vec3.add(lightPosition, [0,1,0]);
 		}
 		else if(i == 2) {
-			vec3.add(lightPosition, [0,-0.5,0]);
+			vec3.add(lightPosition, [0,-1,0]);
 		}
 		else if(i == 3) {
-			vec3.add(lightPosition, [-0.5,0,0]);
+			vec3.add(lightPosition, [-1,0,0]);
 		}
 		else if(i == 4) {
-			vec3.add(lightPosition, [0.5,0,0]);
+			vec3.add(lightPosition, [1,0,0]);
 		}
 		else if(i == 5) {
-			vec3.add(lightPosition, [0,0,-0.5]);
+			vec3.add(lightPosition, [0,0,-1]);
 		}
 		else if(i == 6) {
-			vec3.add(lightPosition, [0,0,0.5]);
+			vec3.add(lightPosition, [0,0,1]);
 		}
+		console.log("Light:"+lightPosition);
 		
 		drawScene(); 
 
