@@ -412,7 +412,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 
 		vec3.set([0,0,20],cameraPosition);
 		vec3.set([0,0,0], COI);
-		vec3.set([0,5,5],lightPosition);
+		vec3.set([0,50,05],lightPosition);
 		lightAmbient = [0,0,0,1];
 		lightDiffuse = [.8,.8,.8,1];
 		lightSpecular = [1,1,1,1];
