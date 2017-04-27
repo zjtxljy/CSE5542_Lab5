@@ -281,6 +281,8 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
  
 		gl.useProgram(shaderProgramSB);
 
+		console.log("Cubemap:")
+
 		gl.uniformMatrix4fv(shaderProgramSB.mMatrixUniform, false, mMatrix);
         gl.uniformMatrix4fv(shaderProgramSB.vMatrixUniform, false, vMatrix);
         gl.uniformMatrix4fv(shaderProgramSB.pMatrixUniform, false, pMatrix);
