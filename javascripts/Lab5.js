@@ -33,7 +33,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
     var modelVertexIndexBuffer;
     var skyboxVertexPositionBuffer;
     var skyboxVertexIndexBuffer;
-    var mat_ambient = [0, 0, 0, 1]; 
+    var mat_ambient = [0.5, 0.5, 0.5, 1]; 
   	var	mat_diffuse= [0.7, 0.7, 0.7, 1]; 
   	var	mat_specular = [.9, .9, .9,1]; 
   	var	mat_shine = [50];
@@ -281,8 +281,6 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
  
 		gl.useProgram(shaderProgramSB);
 
-		console.log("Cubemap:")
-
 		gl.uniformMatrix4fv(shaderProgramSB.mMatrixUniform, false, mMatrix);
         gl.uniformMatrix4fv(shaderProgramSB.vMatrixUniform, false, vMatrix);
         gl.uniformMatrix4fv(shaderProgramSB.pMatrixUniform, false, pMatrix);
@@ -354,14 +352,14 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
-        mat4.perspective(60, 1.0, 0.1, 100, pMatrix);  // set up the projection matrix 
+        pMatrix = mat4.perspective(60, 1.0, 0.1, 100, pMatrix);  // set up the projection matrix 
 
 		mat4.identity(mMatrix);
 		mMatrix = mat4.scale(mMatrix, [1 / 10, 1 / 10, 1 / 10]);
 
-		vec3.set([0,50,50],lightPosition);
-		lightAmbient = [0,0,0,1];
-		lightDiffuse = [.8,.8,.8,1];
+		vec3.set([0,0,0],lightPosition);
+		lightAmbient = [0.5,0.5,0.5,1];
+		lightDiffuse = [1,1,1,1];
 		lightSpecular = [1,1,1,1];
 
 
@@ -418,9 +416,9 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 
 	
 	function redraw() {
-		vec3.set([0,5,5],lightPosition);
-		lightAmbient = [0,0,0,1];
-		lightDiffuse = [.8,.8,.8,1];
+		vec3.set([0,0,0],lightPosition);
+		lightAmbient = [0.5,0.5,0.5,1];
+		lightDiffuse = [1,1,1,1];
 		lightSpecular = [1,1,1,1];
 		trackball.setView(5, [0, 0, 1], [0, 1, 0]);
 		drawScene();
