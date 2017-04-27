@@ -242,7 +242,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 		nMatrix = mat4.multiply(nMatrix, mMatrix); 	
 		nMatrix = mat4.inverse(nMatrix);
 		nMatrix = mat4.transpose(nMatrix); 
-		gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, nMatrix);
+		gl.uniformMatrix4fv(shaderProgram.nMatrixUniform, false, nMatrix);
 
 		mat4.identity(v2wMatrix);
     	v2wMatrix = mat4.multiply(v2wMatrix, vMatrix);   
