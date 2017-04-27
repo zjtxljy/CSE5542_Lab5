@@ -109,8 +109,6 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 	function initSkybox(){
 		var vertices = [ -100, -100, -100, 100, -100, -100, -100, 100, -100, 100, 100, -100, -100, -100, 100, 100, -100, 100, -100, 100, 100, 100, 100, 100];
 		var indices = [2, 1, 0, 1, 2, 3, 4, 2, 0, 2, 4, 6, 1, 4, 0, 4, 1, 5, 6, 5, 7, 5, 6, 4, 3, 6, 7, 6, 3, 2, 5, 3, 7, 3, 5, 1];
-		console.log(vertices.length);
-		console.log(indices.length);
 		skyboxVertexPositionBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, skyboxVertexPositionBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
@@ -164,7 +162,8 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 		sampleTexture = gl.createTexture();
 		sampleTexture.image = new Image();
 		sampleTexture.image.onload = function() { handleTextureLoaded(sampleTexture); }
-		sampleTexture.image.src = "images/texture.jpg";   
+		sampleTexture.image.src = "images/texture.jpg"; 
+		console.log("loading texture....")   
 	}
 
 
@@ -283,7 +282,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
  
 		gl.useProgram(shaderProgramSB);
 
-/*		console.log("Cubemap:")
+		console.log("Cubemap:")
 
 		gl.uniformMatrix4fv(shaderProgramSB.mMatrixUniform, false, mMatrix);
         gl.uniformMatrix4fv(shaderProgramSB.vMatrixUniform, false, vMatrix);
@@ -293,13 +292,11 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 		gl.bindTexture(gl.TEXTURE_CUBE_MAP, cubemapTexture);    // bind the texture object to the texture unit 
 		gl.uniform1i(shaderProgramSB.cube_map_textureUniform, 0);   // pass the texture unit to the shader
 
-		console.log(skyboxVertexIndexBuffer.numItems);
-		console.log(skyboxVertexPositionBuffer.numItems);
         gl.bindBuffer(gl.ARRAY_BUFFER, skyboxVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgramSB.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, skyboxVertexIndexBuffer);
 		gl.drawElements(gl.TRIANGLES, skyboxVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-*/
+
     }
 
 
@@ -411,7 +408,7 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 
 		mat4.identity(mMatrix);
 
-		vec3.set([0,0,5],cameraPosition);
+		vec3.set([0,0,20],cameraPosition);
 		vec3.set([0,0,0], COI);
 		vec3.set([0,5,5],lightPosition);
 		lightAmbient = [0,0,0,1];
@@ -451,22 +448,22 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 
 	function movePOC(i) {
 		if(i == 1) {
-			vec3.add(cameraPosition, [0,0.2,0]);
+			vec3.add(cameraPosition, [0,2,0]);
 		}
 		else if(i == 2) {
-			vec3.add(cameraPosition, [0,-0.2,0]);
+			vec3.add(cameraPosition, [0,-2,0]);
 		}
 		else if(i == 3) {
-			vec3.add(cameraPosition, [-0.2,0,0]);
+			vec3.add(cameraPosition, [-2,0,0]);
 		}
 		else if(i == 4) {
-			vec3.add(cameraPosition, [0.2,0,0]);
+			vec3.add(cameraPosition, [2,0,0]);
 		}
 		else if(i == 5) {
-			vec3.add(cameraPosition, [0,0,-0.2]);
+			vec3.add(cameraPosition, [0,0,-2]);
 		}
 		else if(i == 6) {
-			vec3.add(cameraPosition, [0,0,0.2]);
+			vec3.add(cameraPosition, [0,0,2]);
 		}
 		
 		drawScene(); 
