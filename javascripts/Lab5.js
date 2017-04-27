@@ -101,6 +101,8 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(modelData.indices), gl.STATIC_DRAW);
 		modelVertexIndexBuffer.itemSize = 1;
 		modelVertexIndexBuffer.numItems = modelData.indices.length;
+
+		drawScene();
 	}
 
 
@@ -225,6 +227,10 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
         
         vMatrix = mat4.lookAt(cameraPosition, COI, [0,1,0], vMatrix);
         mat4.multiply(cameraRotateMatrix, vMatrix, vMatrix);
+
+        if (modelVertexPositionBuffer == null || modelVertexNormalBuffer == null || modelVertexIndexBuffer == null || lightSpecular == []) {
+            return;
+        }
 
         gl.useProgram(shaderProgram);
 
@@ -394,16 +400,17 @@ var shaderProgramSB;   // shader program for the sky box (environment cube)
 
         mat4.perspective(60, 1.0, 0.1, 100, pMatrix);  // set up the projection matrix 
 
+        vMatrix = mat4.lookAt(cameraPosition, COI, [0,1,0], vMatrix);	// set up the view matrix
+		mat4.identity(cameraRotateMatrix);
+
+		mat4.identity(mMatrix);
+
 		vec3.set([0,0,5],cameraPosition);
 		vec3.set([0,0,0], COI);
 		vec3.set([0,5,5],lightPosition);
 		lightAmbient = [0,0,0,1];
 		lightDiffuse = [.8,.8,.8,1];
 		lightSpecular = [1,1,1,1];
-		vMatrix = mat4.lookAt(cameraPosition, COI, [0,1,0], vMatrix);	// set up the view matrix
-		mat4.identity(cameraRotateMatrix);
-
-		mat4.identity(mMatrix);
 
 
 		document.addEventListener('mousedown', onDocumentMouseDown, false); 
